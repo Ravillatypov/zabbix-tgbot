@@ -7,12 +7,12 @@ import (
 	"github.com/boltdb/bolt"
 )
 
-// DB структура для работы с базой
+// DB type
 type DB struct {
 	d *bolt.DB
 }
 
-// Init инициализирует базу
+// Init initialise DB type
 func (d *DB) Init(dbname string) error {
 	base, err := bolt.Open(dbname, 0600, &bolt.Options{Timeout: time.Second})
 	if err != nil {
@@ -23,7 +23,7 @@ func (d *DB) Init(dbname string) error {
 	return nil
 }
 
-// GetConfig берет из базы конфиг
+// GetConfig take config as *map[string]string from database
 func (d *DB) GetConfig() *map[string]string {
 	var conf map[string]string
 	d.d.View(func(t *bolt.Tx) error {
@@ -37,7 +37,7 @@ func (d *DB) GetConfig() *map[string]string {
 	return &conf
 }
 
-// SetConfig сохраняет конфиг в багу
+// SetConfig save config in database
 func (d *DB) SetConfig(conf *map[string]string) {
 	d.d.Update(func(t *bolt.Tx) error {
 		b := t.Bucket([]byte("config"))
